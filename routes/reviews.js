@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// ✅ Crear nueva reseña
+// ✅ Crear nueva reseña (envía gameId en el body)
 router.post('/', async (req, res) => {
   try {
     const newReview = new Review(req.body);
@@ -20,6 +20,28 @@ router.post('/', async (req, res) => {
     res.status(201).json({ message: 'Reseña agregada correctamente ✅', data: newReview });
   } catch (error) {
     res.status(400).json({ message: 'Error al crear la reseña ❌', error });
+  }
+});
+
+// 🔥 POST /reviews/:gameId → Crear reseña para un juego (gameId en params)
+router.post('/:gameId', async (req, res) => {
+  try {
+    const { gameId } = req.params;
+    const { rating, text, difficulty, progress } = req.body;
+
+    const newReview = await Review.create({
+      gameId,
+      rating,
+      text,
+      difficulty,
+      progress,
+      createdAt: new Date()
+    });
+
+    res.status(201).json(newReview);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "No se pudo crear la reseña" });
   }
 });
 
@@ -41,19 +63,17 @@ router.delete('/:id', async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: 'Error al eliminar la reseña ❌', error });
   }
-  
-});
-// ✅ Obtener todas las reseñas de un juego específico (si no hay, devuelve array vacío)
-router.get("/game/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const reviews = await Review.find({ gameId: id }).populate("gameId", "name");
-    res.json(reviews); // incluso si está vacío []
-  } catch (error) {
-    console.error("Error al obtener reseñas:", error);
-    res.status(500).json({ message: "Error al obtener reseñas del juego ❌", error });
-  }
 });
 
+// 🔥 GET /reviews/game/:gameId → obtener reseñas de un juego
+router.get('/game/:gameId', async (req, res) => {
+  try {
+    const reviews = await Review.find({ gameId: req.params.gameId }).sort({ createdAt: -1 }).populate('gameId', 'name');
+    res.json(reviews);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error cargando reseñas" });
+  }
+});
 
 module.exports = router;
