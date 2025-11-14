@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 
-// Definimos el esquema (estructura del documento)
 const gameSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true, // obligatorio
+    required: true,
   },
   genre: {
     type: String,
@@ -16,11 +15,27 @@ const gameSchema = new mongoose.Schema({
   },
   releaseYear: {
     type: Number,
-    required: true },
-    imageUrl: { type: String, default: "" }, // 🆕 Imagen del juego
+    required: true
+  },
+  imageUrl: { 
+    type: String, 
+    default: "" 
+  },
+  // 🔥 NUEVO: Campo rating
+  rating: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 5
+  },
+  // 🔥 NUEVO: Campo description
+  description: {
+    type: String,
+    default: ""
+  }
+}, {
+  timestamps: true // Agrega createdAt y updatedAt automáticamente
 });
 
-// Creamos el modelo basado en ese esquema
 const Game = mongoose.model("Game", gameSchema);
-
 module.exports = Game;
