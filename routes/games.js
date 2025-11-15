@@ -93,7 +93,7 @@ router.put("/:id", async (req, res) => {
       updatedData, 
       { 
         new: true,
-        runValidators: true // Ejecuta validaciones del schema
+        runValidators: true // Ejecuta validaciones del schema (recordar)
       }
     );
 
@@ -127,7 +127,7 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).json({ message: "Juego no encontrado" });
     }
 
-    // 🔥 BONUS: También eliminar las reseñas asociadas
+    // 🔥 BONUS: También eliminar las reseñas asociadas   ...
     const Review = require("../models/Review");
     await Review.deleteMany({ gameId: id });
 
