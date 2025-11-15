@@ -20,7 +20,7 @@ router.get('/game/:gameId', async (req, res) => {
   try {
     const { gameId } = req.params;
     
-    // Validar que sea un ObjectId válido
+    // Validar que sea un ObjectId válido ok 
     if (!gameId.match(/^[0-9a-fA-F]{24}$/)) {
       return res.status(400).json({ message: "ID inválido" });
     }
