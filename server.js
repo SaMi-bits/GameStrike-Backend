@@ -6,8 +6,16 @@ require('dotenv').config();
 const app = express();
 
 // Middlewares
-app.use(cors());
 app.use(express.json());
+
+// Configuración CORS para producción
+const corsOptions = {
+  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 
 // Logging middleware (opcional pero útil)
 app.use((req, res, next) => {
