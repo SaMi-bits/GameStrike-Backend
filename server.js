@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const app = express();
 
-// Middlewares
+// CORS PARA PRODUCCIÓN (GitHub Pages + Render)
 app.use(cors({
   origin: [
     "https://sami-bits.github.io",
@@ -14,9 +14,10 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: false
 }));
+
 app.use(express.json());
 
-// Logging middleware (opcional pero útil)
+// Logging middleware
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path}`);
   next();
@@ -31,7 +32,7 @@ app.use("/api/reviews", reviewRoutes);
 
 // Ruta de prueba
 app.get('/', (req, res) => {
-  res.json({ 
+  res.json({
     message: 'API GameStrike funcionando 🚀',
     endpoints: {
       games: '/api/games',
@@ -40,29 +41,30 @@ app.get('/', (req, res) => {
   });
 });
 
-// Manejo de rutas no encontradas
+// Rutas no encontradas
 app.use((req, res) => {
   res.status(404).json({ message: 'Ruta no encontrada' });
 });
 
-// Manejo de errores global
+// Manejo global de errores
 app.use((err, req, res, next) => {
   console.error('Error global:', err);
-  res.status(500).json({ 
-    message: 'Error interno del servidor', 
-    error: err.message 
+  res.status(500).json({
+    message: 'Error interno del servidor',
+    error: err.message
   });
 });
 
 const PORT = process.env.PORT || 4000;
 const MONGO = process.env.MONGO_URI || 'mongodb://localhost:27017/gamestrike';
 
-// Conexión a MongoDB y arranque del servidor
-mongoose.connect(MONGO)
+// Conexión a MongoDB y servidor
+mongoose
+  .connect(MONGO)
   .then(() => {
     console.log('✅ MongoDB conectado exitosamente');
     console.log(`📊 Base de datos: ${MONGO}`);
-    
+
     app.listen(PORT, () => {
       console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
       console.log(`📡 API disponible en http://localhost:${PORT}/api`);
@@ -73,7 +75,7 @@ mongoose.connect(MONGO)
     process.exit(1);
   });
 
-// Manejo de cierre graceful
+// Apagado seguro
 process.on('SIGINT', async () => {
   console.log('\n🛑 Cerrando servidor...');
   await mongoose.connection.close();
