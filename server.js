@@ -6,8 +6,6 @@ require('dotenv').config();
 const app = express();
 
 // CORS PARA PRODUCCIÓN (GitHub Pages + Render)
-const cors = require("cors");
-
 app.use(cors({
   origin: [
     "https://sami-bits.github.io",  // tu frontend en GitHub Pages
@@ -17,7 +15,6 @@ app.use(cors({
   methods: "GET,POST,PUT,DELETE",
   credentials: true
 }));
-
 
 app.use(express.json());
 
