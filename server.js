@@ -6,14 +6,18 @@ require('dotenv').config();
 const app = express();
 
 // CORS PARA PRODUCCIÓN (GitHub Pages + Render)
+const cors = require("cors");
+
 app.use(cors({
   origin: [
-    "https://sami-bits.github.io",
-    "https://sami-bits.github.io/GameStrike-Frontend"
+    "https://sami-bits.github.io",  // tu frontend en GitHub Pages
+    "http://localhost:5173",        // para desarrollo local
+    "http://localhost:3000"
   ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: false
+  methods: "GET,POST,PUT,DELETE",
+  credentials: true
 }));
+
 
 app.use(express.json());
 
