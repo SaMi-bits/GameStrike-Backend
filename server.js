@@ -6,7 +6,14 @@ require('dotenv').config();
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: [
+    "https://sami-bits.github.io",
+    "https://sami-bits.github.io/GameStrike-Frontend"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: false
+}));
 app.use(express.json());
 
 // Logging middleware (opcional pero útil)
