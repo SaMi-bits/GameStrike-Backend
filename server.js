@@ -5,12 +5,35 @@ require('dotenv').config();
 
 const app = express();
 
-// ✅ CORS ABIERTO (temporal, para debug)
+// ✅ CORS - Usar CLIENT_URL del .env
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
 app.use(cors({
-  origin: '*',
+  origin: function(origin, callback) {
+    // Permitir requests sin origin
+    if (!origin) return callback(null, true);
+    
+    // Permitir subdomios de vercel
+    if (origin.match(/^https:\/\/game-strike-frontend.*\.vercel\.app$/)) {
+      return callback(null, true);
+    }
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+app.options('*', cors());
 
 app.use(express.json());
 
