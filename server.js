@@ -5,19 +5,21 @@ require('dotenv').config();
 
 const app = express();
 
-// CORS PARA PRODUCCIÓN (GitHub Pages + Render)
-const cors = require("cors");
-
+// 🔥 CORS ACTUALIZADO PARA VERCEL
 app.use(cors({
   origin: [
-    "https://sami-bits.github.io",  // tu frontend en GitHub Pages
-    "http://localhost:5173",        // para desarrollo local
+    "https://game-strike-frontend.vercel.app",  // 👈 Tu URL exacta de Vercel
+    "https://game-strike-frontend-*.vercel.app", // Preview deployments
+    "http://localhost:5173",
     "http://localhost:3000"
   ],
-  methods: "GET,POST,PUT,DELETE",
-  credentials: true
+  methods: "GET,POST,PUT,DELETE,OPTIONS",
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
+// Middleware para OPTIONS preflight
+app.options('*', cors());
 
 app.use(express.json());
 
