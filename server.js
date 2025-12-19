@@ -33,8 +33,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.options('*', cors());
-// ✅ Fin CORS
 app.use(express.json());
 
 // Logging middleware
