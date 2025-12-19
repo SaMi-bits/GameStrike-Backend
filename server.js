@@ -5,20 +5,21 @@ require('dotenv').config();
 
 const app = express();
 
-// 🔥 CORS ACTUALIZADO PARA VERCEL
+// ✅ CORS ACTUALIZADO - VERSIÓN FINAL
 app.use(cors({
   origin: [
-    "https://game-strike-frontend.vercel.app",  // 👈 Tu URL exacta de Vercel
-    "https://game-strike-frontend-*.vercel.app", // Preview deployments
-    "http://localhost:5173",
+    "https://game-strike-frontend.vercel.app",           // Vercel producción
+    "https://game-strike-frontend-*.vercel.app",         // Vercel previews
+    "https://sami-bits.github.io",                        // GitHub Pages (si lo usas)
+    "https://gamestrike-api.onrender.com",               // Backend
+    "http://localhost:5173",                              // Desarrollo local
     "http://localhost:3000"
   ],
   methods: "GET,POST,PUT,DELETE,OPTIONS",
   credentials: true,
-  allowedHeaders: ["Content-Type", "Authorization"]
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Middleware para OPTIONS preflight
 app.options('*', cors());
 
 app.use(express.json());
