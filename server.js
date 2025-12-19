@@ -5,17 +5,33 @@ require('dotenv').config();
 
 const app = express();
 
-// ✅ CORS ACTUALIZADO - VERSIÓN FINAL
+// ✅ CORS CORREGIDO - Sin wildcards
 app.use(cors({
-  origin: [
-    "https://game-strike-frontend.vercel.app",           // Vercel producción
-    "https://game-strike-frontend-*.vercel.app",         // Vercel previews
-    "https://sami-bits.github.io",                        // GitHub Pages (si lo usas)
-    "https://gamestrike-api.onrender.com",               // Backend
-    "http://localhost:5173",                              // Desarrollo local
-    "http://localhost:3000"
-  ],
-  methods: "GET,POST,PUT,DELETE,OPTIONS",
+  origin: function(origin, callback) {
+    // Lista de orígenes permitidos
+    const allowedOrigins = [
+      'https://game-strike-frontend.vercel.app',
+      'https://sami-bits.github.io',
+      'http://localhost:5173',
+      'http://localhost:3000'
+    ];
+    
+    // Permitir requests sin origin (como apps móviles o Postman)
+    if (!origin) return callback(null, true);
+    
+    // Permitir cualquier subdominio de vercel.app
+    if (origin.match(/^https:\/\/game-strike-frontend.*\.vercel\.app$/)) {
+      return callback(null, true);
+    }
+    
+    // Verificar si el origin está en la lista
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -73,8 +89,8 @@ mongoose
     console.log(`📊 Base de datos: ${MONGO}`);
 
     app.listen(PORT, () => {
-      console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-      console.log(`📡 API disponible en http://localhost:${PORT}/api`);
+      console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
+      console.log(`📡 API disponible en /api`);
     });
   })
   .catch(err => {
