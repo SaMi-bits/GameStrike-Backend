@@ -34,7 +34,7 @@ app.use(cors({
 }));
 
 app.options('*', cors());
-
+// ✅ Fin CORS
 app.use(express.json());
 
 // Logging middleware
